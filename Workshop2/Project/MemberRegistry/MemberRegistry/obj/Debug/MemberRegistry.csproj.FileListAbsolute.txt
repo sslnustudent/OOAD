@@ -1,0 +1,6 @@
+C:\Users\Sebastian Svensson\Documents\GitHub\OOAD\Workshop2\Project\MemberRegistry\MemberRegistry\bin\Debug\MemberRegistry.exe.config
+C:\Users\Sebastian Svensson\Documents\GitHub\OOAD\Workshop2\Project\MemberRegistry\MemberRegistry\obj\Debug\MemberRegistry.csprojResolveAssemblyReference.cache
+C:\Users\Sebastian Svensson\Documents\GitHub\OOAD\Workshop2\Project\MemberRegistry\MemberRegistry\bin\Debug\MemberRegistry.exe
+C:\Users\Sebastian Svensson\Documents\GitHub\OOAD\Workshop2\Project\MemberRegistry\MemberRegistry\bin\Debug\MemberRegistry.pdb
+C:\Users\Sebastian Svensson\Documents\GitHub\OOAD\Workshop2\Project\MemberRegistry\MemberRegistry\obj\Debug\MemberRegistry.exe
+C:\Users\Sebastian Svensson\Documents\GitHub\OOAD\Workshop2\Project\MemberRegistry\MemberRegistry\obj\Debug\MemberRegistry.pdb
