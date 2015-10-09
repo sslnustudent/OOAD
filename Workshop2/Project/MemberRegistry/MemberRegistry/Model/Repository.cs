@@ -10,7 +10,7 @@ namespace MemberRegistry.Model
     class Repository
     {
          
-        enum MembertReadStatus
+        enum MemberReadStatus
         {
             Indefinite,
             Name,
