@@ -11,6 +11,7 @@ namespace MemberRegistry.Model
         public string name { get; set; }
         public string personalNumber { get; set; }
         public int memberID { get; set; }
+        public List<Boat> boatlist { get; set; }
 
         public Member() 
         { }

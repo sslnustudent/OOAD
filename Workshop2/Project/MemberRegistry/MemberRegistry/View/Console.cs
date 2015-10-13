@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MemberRegistry.Model;
 
 namespace MemberRegistry.View
 {
     class ConsoleView
     {
-        public void Menu() 
+        public int Menu() 
         {
             Console.Clear();
             Console.BackgroundColor = ConsoleColor.DarkCyan;
@@ -17,7 +18,7 @@ namespace MemberRegistry.View
             Console.WriteLine("             Member Registry                ");
             Console.WriteLine("============================================\n");
             Console.ResetColor();
-            Console.WriteLine("0. Save and Quit.\n");
+            Console.WriteLine("0. Quit.\n");
             Console.WriteLine("-Lists-------------------------------------\n");
             Console.WriteLine("1. Compact List.");
             Console.WriteLine("2- Verbose List.\n");
@@ -26,14 +27,9 @@ namespace MemberRegistry.View
             Console.WriteLine("4. Delete Member.");
             Console.WriteLine("5. Edit Member.");
             Console.WriteLine("6. View Member.\n");
-            Console.WriteLine("-Boats-------------------------------------\n");
-            Console.WriteLine("7. Add Boat");
-            Console.WriteLine("8. Delete Boat.");
-            Console.WriteLine("9. Edit Boat.\n");
             Console.WriteLine("============================================\n");
-
-
             Console.Write("Chose option [0-9]: ");
+            return int.Parse(Console.ReadLine());
         }
 
         public void PressKeyToContinue() 
@@ -42,63 +38,147 @@ namespace MemberRegistry.View
             Console.BackgroundColor = ConsoleColor.DarkBlue;
             Console.WriteLine("\n  Press any key to continue   ");
             Console.ResetColor();
+            Console.ReadKey();
         }
 
-        public void SelectMemberById() 
+        public int SelectMember() 
         {
-            Console.WriteLine("Write the member id: ");
+            Console.WriteLine("Select a member: ");
+            return Convert.ToInt32(Console.ReadLine()) - 1;
         }
 
-        public void SelectBoatById()
+        public int SelectBoat(Member v_member) 
         {
-            Console.WriteLine("Write the boat id: ");
+            for (int i = 1; i <= v_member.boatlist.Count; i++)
+            {
+                SelectListBoat(v_member.boatlist[i - 1], i - 1);
+            }
+
+            Console.WriteLine("Write the boat number: ");
+            return Convert.ToInt32(Console.ReadLine());
         }
 
-        public void AddMemberName() 
+        public int BoatMenu() 
+        {
+            Console.Clear();
+            Console.BackgroundColor = ConsoleColor.DarkCyan;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("============================================");
+            Console.WriteLine("             Member Registry                ");
+            Console.WriteLine("============================================\n");
+            Console.ResetColor();
+            Console.WriteLine("-Boats-------------------------------------\n");
+            Console.WriteLine("0. Go back");
+            Console.WriteLine("1. Add Boat");
+            Console.WriteLine("2. Delete Boat.");
+            Console.WriteLine("3. Edit Boat.\n");
+            Console.WriteLine("============================================\n");
+            Console.Write("Chose option [0-3]: ");
+            return int.Parse(Console.ReadLine());
+        }
+
+        public Member AddMember() 
         {
             Console.WriteLine("Write the member name: ");
-        }
-
-        public void AddMemberPersonalNumber()
-        {
+            Member v_member = new Member(Console.ReadLine());
+            if (v_member.name == "")
+            {
+                ErrorMessege();
+                return null; 
+            }
+            Console.WriteLine("The format of personal number is xxxxxxxxxx\nExample: 9101049121");
             Console.WriteLine("Write the member personal number: ");
+            v_member.personalNumber = Console.ReadLine();
+            if (v_member.personalNumber == "")
+            { return null; }
+            foreach (char c in v_member.personalNumber)
+            {
+                if (c < '0' || c > '9')
+                { 
+                    ErrorMessege();
+                    return null; 
+                }
+            }
+            if (v_member.personalNumber.Length != 10)
+            {
+                ErrorMessege();
+                return null;
+            }
+            v_member.boatlist = new List<Boat>();
+            return v_member;
         }
 
-        public void AddBoatName() 
+        public Boat AddBoat() 
         {
             Console.WriteLine("Write the boat name: ");
+            Boat v_boat = new Boat(Console.ReadLine());
+            if (v_boat.name == "")
+            {
+                ErrorMessege();
+                return null; 
+            }
+            v_boat.type = SelectBoatType();
+            if (v_boat.type == "")
+            {
+                ErrorMessege();
+                return null; 
+            }
+            Console.WriteLine("Write the boat length: ");
+            v_boat.length = int.Parse(Console.ReadLine());
+            return v_boat;
         }
 
-        public void AddBoatOwner()
+        public string SelectBoatType() 
         {
-            Console.WriteLine("Write the boats owners id: ");
+            Console.WriteLine("0. Sailboat");
+            Console.WriteLine("1. Motorsailer");
+            Console.WriteLine("2. Kayak/Canoe");
+            Console.WriteLine("3. Other\n");
+            Console.Write("Chose boat type: ");
+            int selectedType = int.Parse(Console.ReadLine());
+            switch (selectedType) 
+            {
+                case 0:
+                    return "Sailboat";
+                case 1:
+                    return "Motorsailer";
+                case 2:
+                    return "Kayak/Canoe";
+                case 3:
+                    return "Other";
+            }
+            return null;
         }
 
-        public void AddBoatType()
+        public void CompactListMemberPrint(Member v_member)
         {
-            Console.WriteLine("Write the boat type: ");
+            Console.WriteLine("Name: {0}    Member-ID: {1}  Number of boats: {2}", v_member.name, v_member.memberID, v_member.boatlist.Count);
         }
 
-        public void AddBoatLength()
+        public void SelectListMember(Member v_member, int listnumber)
         {
-            Console.WriteLine("Write boat length: ");
+            Console.WriteLine("{0}. Name: {1}    Member-ID: {2}", listnumber, v_member.name, v_member.memberID);
         }
 
-        public void CompactListMemberPrint(string name, int id, int numberOfBoats)
+        public void SelectListBoat(Boat v_boat, int lisnumber)
         {
-            Console.WriteLine("Name: {0}    Member-ID: {1}   Number of boats: {2}", name, id, numberOfBoats);
+            Console.WriteLine("{0}. Name: {1}    Type: {2}  Length{3}", lisnumber,v_boat.name, v_boat.type, v_boat.length);
         }
 
-        public void VerboseListMemberPrint(string memberName, string personID, int memberID)
+        public void VerboseListMemberPrint(Member v_member)
         {
             Console.WriteLine("\n-Member-------------------------------------------------------\n");
-            Console.WriteLine("Name: {0} Personal Number:   {1}   Member-ID:  {2}\n", memberName, personID, memberID);
+            Console.WriteLine("Name: {0} Personal Number:   {1}   Member-ID:  {2}\n", v_member.name, v_member.personalNumber, v_member.memberID);
             Console.WriteLine("-Boats--------------------------------------------------------\n");
+            for (int i = 1; i <= v_member.boatlist.Count; i++)
+            {
+                    VerboseListBoatPrint(v_member.boatlist[i - 1]);
+            }
         }
 
-        public void VerboseListBoatPrint(string boatName, string boatType, int boatLength, int boatid)
+        public void VerboseListBoatPrint(Boat v_boat)
         {
-            Console.WriteLine("Name of Boat: {0}    Type of Boat: {1}\nBoat Length: {2}    BoatID: {3}", boatName, boatType, boatLength, boatid);
+            Console.WriteLine("Name of Boat: {0}    Type of Boat: {1}   Boat Length: {2}", v_boat.name, v_boat.type, v_boat.length);
         }
 
         public void ErrorMessege() 
@@ -109,6 +189,7 @@ namespace MemberRegistry.View
             Console.WriteLine("   Error something went wrong  ");
             Console.WriteLine("-------------------------------");
             Console.ResetColor();
+            Console.ReadKey();
         }
     }
 }

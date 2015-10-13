@@ -9,141 +9,106 @@ namespace MemberRegistry.Controller
     class User
     {
 
-        public void Start(View.ConsoleView consoleView, Model.Registry registry)
+        public void RunApplication(View.ConsoleView c_view, Model.Registry c_reg)
         {
             bool quit = false;
-
             int menuChoice;
-            string name;
-            string number;
-            int id;
-
-            int boatid;
-            string boatname;
-            int ownerid;
-            string type;
-            int length;
+            int boatMenuChoice;
+            int listnumber;
 
             while (quit == false)
             {
                 try
                 {
-                    consoleView.Menu();
-                    menuChoice = int.Parse(Console.ReadLine());
+
+                    menuChoice = c_view.Menu();
                     switch (menuChoice)
                     {
                         //Quit
                         case 0:
-                            registry.SaveLists();
                             quit = true;
                             break;
                         //Compact List
                         case 1:
 
-                            for (int i = 1; i <= registry.GetNumberOfMembers(); i++)
+                            for (int i = 1; i <= c_reg.GetNumberOfMembers(); i++)
                             {
-                                consoleView.CompactListMemberPrint(registry.GetMemberName(i - 1), registry.GetMemberID(i - 1), registry.GetMemberNumberOfBoats(i - 1));
+                                c_view.CompactListMemberPrint(c_reg.GetMember(i - 1));
                             }
-                            ;
+                            c_view.PressKeyToContinue();
                             break;
                         //Verbose List
                         case 2:
 
-                            for (int i = 1; i <= registry.GetNumberOfMembers(); i++)
+                            for (int i = 1; i <= c_reg.GetNumberOfMembers(); i++)
                             {
-                                consoleView.VerboseListMemberPrint(registry.GetMemberName(i - 1), registry.GetMemberPersonalNumber(i - 1), registry.GetMemberID(i - 1));
-
-                                for (int a = 1; a <= registry.GetNumberOfBoats(); a++)
-                                {
-                                    if (registry.CheckBoatOwner(a - 1, registry.GetMemberID(i - 1)) == true)
-                                    {
-                                        consoleView.VerboseListBoatPrint(registry.GetBoatName(a - 1), registry.GetBoatType(a - 1), registry.GetBoatLength(a - 1), registry.GetBoatID(a - 1));
-                                    }
-                                }
+                                c_view.VerboseListMemberPrint(c_reg.GetMember(i - 1));
                             }
-
+                            c_view.PressKeyToContinue();
                             break;
                         //Add Member
                         case 3:
-                            consoleView.AddMemberName();
-                            name = Console.ReadLine();
-                            consoleView.AddMemberPersonalNumber();
-                            number = Console.ReadLine();
-                            registry.AddMember(name, number);
-
+                            c_reg.AddMember(c_view.AddMember());
+                            c_view.PressKeyToContinue();
+                            c_reg.SaveLists();
                             break;
                         //Delete Member
                         case 4:
-                            consoleView.SelectMemberById();
-                            registry.DeleteMember(Convert.ToInt32(Console.ReadLine()));
+                            for (int i = 1; i <= c_reg.GetNumberOfMembers(); i++)
+                            {
+                                c_view.SelectListMember(c_reg.GetMember(i - 1), i);
+                            }
+                            c_reg.DeleteMember(c_view.SelectMember());
+                            c_view.PressKeyToContinue();
+                            c_reg.SaveLists();
                             break;
                         //Edit Member
                         case 5:
-                            consoleView.SelectMemberById();
-                            id = Convert.ToInt32(Console.ReadLine());
-                            consoleView.AddMemberName();
-                            name = Console.ReadLine();
-                            consoleView.AddMemberPersonalNumber();
-                            number = Console.ReadLine();
-                            registry.EditMember(id, name, number);
-
+                            for (int i = 1; i <= c_reg.GetNumberOfMembers(); i++)
+                            {
+                                c_view.SelectListMember(c_reg.GetMember(i - 1), i);
+                            }
+                            listnumber = c_view.SelectMember();
+                            c_reg.EditMember(listnumber, c_view.AddMember());
+                            c_reg.SaveLists();
                             break;
                         case 6:
                         //View Member
-                            consoleView.SelectMemberById();
-                            id = Convert.ToInt32(Console.ReadLine());
-                            ownerid = registry.GetMemberListNumber(id);
-                            consoleView.VerboseListMemberPrint(registry.GetMemberName(id), registry.GetMemberPersonalNumber(id), registry.GetMemberID(id));
-                            for (int a = 1; a <= registry.GetNumberOfBoats(); a++)
+                            for (int i = 1; i <= c_reg.GetNumberOfMembers(); i++)
                             {
-                                if (registry.CheckBoatOwner(a - 1, id) == true)
-                                {
-                                    consoleView.VerboseListBoatPrint(registry.GetBoatName(a - 1), registry.GetBoatType(a - 1), registry.GetBoatLength(a - 1), registry.GetBoatID(a - 1));
-                                }
+                                c_view.SelectListMember(c_reg.GetMember(i - 1), i);
                             }
-
+                            listnumber = c_view.SelectMember();
+                            c_view.VerboseListMemberPrint(c_reg.GetMember(listnumber));
+                            boatMenuChoice = c_view.BoatMenu();
+ 
+                            switch (boatMenuChoice)
+                            {
+                                case 0:
+                                    break;
+                                case 1:
+                                    //Add Boat
+                                    c_reg.AddBoat(c_view.AddBoat(), listnumber);
+                                    c_reg.SaveLists();
+                                    break;
+                                case 2:
+                                    //Delete Boat
+                                    c_reg.DeleteBoat(c_view.SelectBoat(c_reg.GetMember(listnumber)), listnumber);
+                                    c_reg.SaveLists();
+                                    break;
+                                //Edit Boat
+                                case 3:
+                                    c_reg.EditBoat(c_view.SelectBoat(c_reg.GetMember(listnumber)), listnumber, c_view.AddBoat());
+                                    c_reg.SaveLists();
+                                    break;
+                            }
                             break;
-                        case 7:
-                        //Add Boat
-                            consoleView.AddBoatName();
-                            boatname = Console.ReadLine();
-                            consoleView.AddBoatOwner();
-                            ownerid = Convert.ToInt32(Console.ReadLine());
-                            consoleView.AddBoatType();
-                            type = Console.ReadLine();
-                            consoleView.AddBoatLength();
-                            length = Convert.ToInt32(Console.ReadLine());
-                            registry.AddBoat(boatname, ownerid, type, length);
-                            break;
-                        case 8:
-                        //Delete Boat
-                            consoleView.SelectBoatById();
-                            registry.DeleteBoat(Convert.ToInt32(Console.ReadLine()));
-                            break;
-                        //Edit Boat
-                        case 9:
-                            consoleView.SelectBoatById();
-                            boatid = Convert.ToInt32(Console.ReadLine());
-                            consoleView.AddBoatName();
-                            boatname = Console.ReadLine();
-                            consoleView.AddBoatOwner();
-                            ownerid = Convert.ToInt32(Console.ReadLine());
-                            consoleView.AddBoatType();
-                            type = Console.ReadLine();
-                            consoleView.AddBoatLength();
-                            length = Convert.ToInt32(Console.ReadLine());
-                            registry.EditBoat(boatid, boatname, ownerid, type, length);
-                            break;
-
                     }
                 }
-                catch 
+                catch
                 {
-                    consoleView.ErrorMessege();
+                    c_view.ErrorMessege();
                 }
-                consoleView.PressKeyToContinue();
-                Console.ReadKey();
-
             }
         }
     }

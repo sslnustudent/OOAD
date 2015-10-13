@@ -1,0 +1,60 @@
+[MemberName]
+Thomas Stensson
+[Personal-Number]
+7312015498
+[Member-ID]
+1
+[BoatName]
+Orange Whale
+[Type]
+Sailboat
+[Length]
+30
+[BoatName]
+Blue Whale
+[Type]
+Motorsailer
+[Length]
+45
+[MemberName]
+Stefan Gustavsson
+[Personal-Number]
+7105073427
+[Member-ID]
+2
+[MemberName]
+Johanes Holgesson
+[Personal-Number]
+9210114389
+[Member-ID]
+4
+[MemberName]
+Oskar Sturesson
+[Personal-Number]
+8201063476
+[Member-ID]
+5
+[BoatName]
+Flying Whale
+[Type]
+Sailboat
+[Length]
+40
+[MemberName]
+Kjell Larsson
+[Personal-Number]
+9004023265
+[Member-ID]
+6
+[BoatName]
+Golden Hamster
+[Type]
+Sailboat
+[Length]
+30
+[MemberName]
+Lars Svensson
+[Personal-Number]
+9103011234
+[Member-ID]
+7

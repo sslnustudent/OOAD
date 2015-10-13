@@ -14,7 +14,7 @@ namespace MemberRegistry
             Controller.User user = new Controller.User();
             View.ConsoleView con = new View.ConsoleView();
 
-            user.Start(con, reg);
+            user.RunApplication(con, reg);
         }
     }
 }

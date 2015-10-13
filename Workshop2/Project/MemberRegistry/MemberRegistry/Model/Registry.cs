@@ -12,8 +12,6 @@ namespace MemberRegistry.Model
 
         private List<Member> memberList;
 
-        private List<Boat> boatList;
-
         public int GetMemberListNumber(int id) 
         {
             for (int i = 1; i <= GetNumberOfMembers(); i++)
@@ -26,93 +24,23 @@ namespace MemberRegistry.Model
             return 0;
         }
 
-        public int GetBoatListNumber(int id)
-        {
-            for (int i = 1; i <= GetNumberOfBoats(); i++)
-            {
-                if (id == boatList[i - 1].boatID)
-                {
-                    return i - 1;
-                }
-            }
-            return 0;
-        }
-
         public int GetNumberOfMembers() 
         {
             return memberList.Count;
         }
 
-        public int GetNumberOfBoats() 
+        public Member GetMember(int listnumber)
         {
-            return boatList.Count;
+            return memberList[listnumber];
         }
 
-        public bool CheckBoatOwner(int i, int id)
+        public void AddMember(Member m_member)
         {
-            if (id == boatList[i].ownerID)
+            if (m_member == null)
             {
-                return true;
-            }
-            else 
-            {
-                return false;
-            }
-        }
-
-        public string GetMemberName(int listnumber) 
-        {
-            return memberList[listnumber].name;
-        }
-
-        public string GetMemberPersonalNumber(int listnumber) 
-        {
-            return memberList[listnumber].personalNumber;
-        }
-
-        public int GetBoatID(int listnumber)
-        {
-            return boatList[listnumber].boatID;
-        }
-
-        public int GetMemberID(int listnumber)
-        {
-            return memberList[listnumber].memberID;
-        }
-
-        public string GetBoatName(int listnumber) 
-        {
-            return boatList[listnumber].name;
-        }
-
-        public string GetBoatType(int listnumber) 
-        {
-            return boatList[listnumber].type;
-        }
-
-        public int GetBoatLength(int listnumber)
-        {
-            return boatList[listnumber].length;
-        }
-
-        public int GetMemberNumberOfBoats(int listnumber)
-        {
-            int i = 0;
-            int id = memberList[listnumber].memberID;
-
-            foreach (Boat b in boatList)
-            {
-                if (b.ownerID == id)
-                { 
-                    i++;
-                }
+                return;
             }
 
-            return i;
-        }
-
-        public void AddMember(string name, string number)
-        {
             int id = 0;
             for (int i = 1; i <= GetNumberOfMembers(); i++)
             {
@@ -122,81 +50,50 @@ namespace MemberRegistry.Model
                 }
             }
             id++;
-            Member member = new Member(name, number, id);
+            m_member.memberID = id;
 
-            memberList.Add(member);
+            memberList.Add(m_member);
         }
 
-        public void DeleteMember(int id)
+        public void DeleteMember(int listnumber)
         {
-            int i = GetMemberListNumber(id);
-            memberList.Remove(memberList[i]);
+            memberList.Remove(memberList[listnumber]);
+        }
 
-            //Deleting the members boats
-            for (int a = 1; a <= GetNumberOfBoats(); a++)
+        public void EditMember(int listnumber, Member m_member)
+        {
+            m_member.memberID = memberList[listnumber].memberID;
+            memberList[listnumber] = m_member;
+        }
+
+        public void AddBoat(Boat m_boat, int memberlistnumber)
+        {
+            if (m_boat == null)
             {
-                if (CheckBoatOwner(a - 1, id) == true)
-                {
-
-                    DeleteBoat(GetBoatID(a - 1));
-                }
+                return;
             }
-
+            memberList[memberlistnumber].boatlist.Add(m_boat);
         }
 
-        public void EditMember(int id, string name, string number)
+        public void DeleteBoat(int boatListNumber, int memberListNumber)
         {
-            int i = GetMemberListNumber(id);
-            memberList[i].name = name;
-            memberList[i].personalNumber = number;
-
+            memberList[memberListNumber].boatlist.Remove(memberList[memberListNumber].boatlist[boatListNumber]);
         }
 
-        public void AddBoat(string name, int ownerid, string type, int length)
+        public void EditBoat(int boatListNumber, int memberListNumber, Boat m_boat)
         {
-
-            int id = 0;
-            for (int i = 1; i <= GetNumberOfBoats(); i++)
-            {
-                if (id < boatList[i - 1].boatID)
-                {
-                    id = boatList[i - 1].boatID;
-                }
-            }
-            id++;
-            Boat boat = new Boat(name, ownerid, id, type, length);
-
-            boatList.Add(boat);
-        }
-
-        public void DeleteBoat(int id)
-        {
-            int i = GetBoatListNumber(id);
-            boatList.Remove(boatList[i]);
-
-        }
-
-        public void EditBoat(int id, string name, int ownerid, string type, int length)
-        {
-            int i = GetBoatListNumber(id);
-            boatList[i].name = name;
-            boatList[i].ownerID = ownerid;
-            boatList[i].type = type;
-            boatList[i].length = length;
+            memberList[memberListNumber].boatlist[boatListNumber] = m_boat;
         }
 
         public Registry() 
         {
             repository = new Repository();
             memberList = repository.LoadMembers();
-            boatList = repository.LoadBoats();
-
         }
 
         public void SaveLists() 
         {
             repository.SaveMembers(memberList);
-            repository.SaveBoats(boatList);
         }
     }
 }

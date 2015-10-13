@@ -15,7 +15,10 @@ namespace MemberRegistry.Model
             Indefinite,
             Name,
             PersonalNumber,
-            MemberID
+            MemberID,
+            BoatName,
+            Type,
+            Length
         }
 
         enum BoatReadStatus
@@ -35,145 +38,108 @@ namespace MemberRegistry.Model
         public List<Member> LoadMembers() 
         {
             List<Member> memberList = new List<Member>();
-            Member member = new Member();
+            bool newMember = false;
+            Member m_member = new Member();
+            Boat m_boat = new Boat();
             string line;
-            MembertReadStatus stat = MembertReadStatus.Indefinite;
-            using (StreamReader reader = new StreamReader("../../TestRegistryMembers.txt"))
+            MemberReadStatus stat = MemberReadStatus.Indefinite;
+            using (StreamReader reader = new StreamReader("../../Registry.txt"))
             {
                 while ((line = reader.ReadLine()) != null)
                 {
-                    if(line == "[Name]")
+                    if(line == "[MemberName]")
                     {
-                        stat = MembertReadStatus.Name;
+                        if (newMember == true)
+                        {
+                            memberList.Add(m_member);
+                        }
+                        else if (newMember == false) 
+                        {
+                            newMember = true;
+                        }
+                        stat = MemberReadStatus.Name;
                         line = reader.ReadLine();
                     }
                     if (line == "[Personal-Number]")
                     {
-                        stat = MembertReadStatus.PersonalNumber;
+                        stat = MemberReadStatus.PersonalNumber;
                         line = reader.ReadLine();
                     }
                     if (line == "[Member-ID]")
                     {
-                        stat = MembertReadStatus.MemberID;
+                        stat = MemberReadStatus.MemberID;
+                        line = reader.ReadLine();
+                        m_member.boatlist = new List<Boat>();
+                    }
+                    if (line == "[BoatName]")
+                    {
+                        stat = MemberReadStatus.BoatName;
+                        line = reader.ReadLine();
+                    }
+                    if (line == "[Type]") 
+                    {
+                        stat = MemberReadStatus.Type;
+                        line = reader.ReadLine();
+                    }
+                    if (line == "[Length]")
+                    {
+                        stat = MemberReadStatus.Length;
                         line = reader.ReadLine();
                     }
 
                     switch (stat)
                     {
-                        case MembertReadStatus.Name :
-                            member = new Member(line);
+                        case MemberReadStatus.Name:
+                            m_member = new Member(line);
                             break;
-                        case MembertReadStatus.PersonalNumber :
-                            member.personalNumber = line;
+                        case MemberReadStatus.PersonalNumber:
+                            m_member.personalNumber = line;
                             break;
-                        case MembertReadStatus.MemberID :
-                            member.memberID = Convert.ToInt32(line);
-                            memberList.Add(member);
+                        case MemberReadStatus.MemberID:
+                            m_member.memberID = int.Parse(line);
+                            break;
+                        case MemberReadStatus.BoatName:
+                            m_boat = new Boat(line);
+                            break;
+                        case MemberReadStatus.Type:
+                            m_boat.type = line;
+                            break;
+                        case MemberReadStatus.Length:
+                            m_boat.length = int.Parse(line);
+                            m_member.boatlist.Add(m_boat);
                             break;
                     }
                 }
+                memberList.Add(m_member);
             }
 
             return memberList;
         }
 
-        public List<Boat> LoadBoats()
-        {
-            List<Boat> boatlist = new List<Boat>();
-            Boat boat = new Boat();
-            string line;
-            BoatReadStatus stat = BoatReadStatus.Indefinite;
-            using (StreamReader reader = new StreamReader("../../TestRegistryBoats.txt"))
-            {
-                while ((line = reader.ReadLine()) != null)
-                {
-                    if (line == "[Name]")
-                    {
-                        stat = BoatReadStatus.Name;
-                        line = reader.ReadLine();
-                    }
-                    if (line == "[Owner-ID]")
-                    {
-                        stat = BoatReadStatus.OwnerID;
-                        line = reader.ReadLine();
-                    }
-                    if (line == "[Boat-ID]")
-                    {
-                        stat = BoatReadStatus.BoatID;
-                        line = reader.ReadLine();
-                    }
-                    if (line == "[Type]")
-                    {
-                        stat = BoatReadStatus.Type;
-                        line = reader.ReadLine();
-                    }
-                    if (line == "[Length]")
-                    {
-                        stat = BoatReadStatus.Length;
-                        line = reader.ReadLine();
-                    }
-
-                    switch (stat)
-                    {
-                        case BoatReadStatus.Name:
-                            boat = new Boat(line);
-                            break;
-                        case BoatReadStatus.OwnerID:
-                            boat.ownerID = Convert.ToInt32(line);
-                            break;
-                        case BoatReadStatus.BoatID:
-                            boat.boatID = Convert.ToInt32(line);
-                            boatlist.Add(boat);
-                            break;
-                        case BoatReadStatus.Type:
-                            boat.type = line;
-                            break;
-                        case BoatReadStatus.Length:
-                            boat.length = Convert.ToInt32(line);
-                            break;
-                    }
-                }
-            }
-
-            return boatlist;
-        }
-
         public void SaveMembers(List<Member> memberlist) 
         {
-            using (StreamWriter writer = new StreamWriter("../../TestRegistryMembers.txt"))
+            using (StreamWriter writer = new StreamWriter("../../Registry.txt"))
             {
                 for (int i = 1; i <= memberlist.Count; i++)
                 {
-                    writer.WriteLine("[Name]");
+                    writer.WriteLine("[MemberName]");
                     writer.WriteLine(memberlist[i - 1].name);
                     writer.WriteLine("[Personal-Number]");
                     writer.WriteLine(memberlist[i - 1].personalNumber);
                     writer.WriteLine("[Member-ID]");
                     writer.WriteLine(memberlist[i - 1].memberID);
+                    for (int a = 1; a <= memberlist[i - 1].boatlist.Count; a++)
+                    {
+                        writer.WriteLine("[BoatName]");
+                        writer.WriteLine(memberlist[i - 1].boatlist[a-1].name);
+                        writer.WriteLine("[Type]");
+                        writer.WriteLine(memberlist[i - 1].boatlist[a-1].type);
+                        writer.WriteLine("[Length]");
+                        writer.WriteLine(memberlist[i - 1].boatlist[a-1].length);
+                    }
                 }
             }
         }
-
-        public void SaveBoats(List<Boat> boatlist) 
-        {
-            using (StreamWriter writer = new StreamWriter("../../TestRegistryBoats.txt"))
-            {
-                for (int i = 1; i <= boatlist.Count; i++)
-                {
-                    writer.WriteLine("[Name]");
-                    writer.WriteLine(boatlist[i - 1].name);
-                    writer.WriteLine("[Owner-ID]");
-                    writer.WriteLine(boatlist[i - 1].ownerID);
-                    writer.WriteLine("[Boat-ID]");
-                    writer.WriteLine(boatlist[i - 1].boatID);
-                    writer.WriteLine("[Type]");
-                    writer.WriteLine(boatlist[i - 1].type);
-                    writer.WriteLine("[Length]");
-                    writer.WriteLine(boatlist[i - 1].length);
-                }
-            }
-        }
-
 
     }
 }
