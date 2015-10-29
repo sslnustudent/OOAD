@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/LogicalClassDesigner"
+  dslVersion="1.0.0.0"
+  Id="e777305e-e39f-43bb-b0c4-7f8ac6fd60da"
+  name="Controller" xmlns="http://schemas.microsoft.com/dsltools/ModelStore">
+  <packagedElements>
+    <packageHasNamedElement>
+      <class
+        Id="6a7f69f1-aa76-45a5-9435-320239ab3593"
+        name="User"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <suppliersInternal>
+          <dependency
+            Id="42f0e6d2-3591-4ee1-b5eb-dd943a3b6d21">
+            <classMoniker
+              Id="5283d7dc-638a-4059-a171-aca5c7faf1a6"
+              LastKnownName="Console"
+              LastKnownLocation="Package_1524.uml" />
+          </dependency>
+          <dependency
+            Id="691eca62-1d0c-4ca1-a7dc-aa938f360e98">
+            <classMoniker
+              Id="4615291e-b598-4cf0-9e84-3bb1710e30a9"
+              LastKnownName="Registry"
+              LastKnownLocation="Package1_1524.uml" />
+          </dependency>
+        </suppliersInternal>
+      </class>
+    </packageHasNamedElement>
+  </packagedElements>
+</package>
